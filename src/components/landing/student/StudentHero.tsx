@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 // Neural network particle animation
@@ -70,6 +71,7 @@ const NeuralNetwork = () => {
 };
 
 export default function StudentHero() {
+  const router = useRouter();
   return (
     <section className="relative min-h-[80vh] flex items-center justify-center px-6 pt-32 pb-20 overflow-hidden">
       {/* Background */}
@@ -106,8 +108,8 @@ export default function StudentHero() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="btn-primary flex items-center justify-center gap-2">
-              Bắt đầu miễn phí <ArrowRight size={18} />
+            <button onClick={()=> router.push("/students/demo/chat")} className="btn-primary flex items-center justify-center gap-2">
+              Trải nghiệm ngay<ArrowRight size={18} />
             </button>
             <button className="btn-secondary">
               Xem bảng giá

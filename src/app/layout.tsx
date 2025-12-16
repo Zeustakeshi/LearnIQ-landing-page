@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro, Noto_Serif } from "next/font/google";
 import "./globals.css";
@@ -25,12 +26,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi">
-      <body
-        className={`${beVietnamPro.variable} ${notoSerif.variable} antialiased bg-[#FDFCF8] text-slate-800 font-sans`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="vi">
+        <body
+          className={`${beVietnamPro.variable} ${notoSerif.variable} antialiased bg-[#FDFCF8] text-slate-800 font-sans`}
+        >
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
