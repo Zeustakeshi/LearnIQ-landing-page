@@ -12,8 +12,7 @@ import {
   Presentation,
   Search,
   Sparkles,
-  Users,
-  X
+  Users
 } from "lucide-react";
 import { useState } from "react";
 
@@ -126,6 +125,100 @@ const pricingPlans = [
     featured: false
   }
 ];
+
+// Waitlist Form Component
+function WaitlistForm() {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setSubmitStatus("error");
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      setSubmitStatus("success");
+      setIsSubmitting(false);
+      setEmail("");
+      
+      // Reset success message after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus("idle");
+      }, 5000);
+    }, 1000);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="relative">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Nhập địa chỉ email của bạn"
+          className="w-full px-6 py-4 rounded-2xl bg-white/80 backdrop-blur-md border-2 border-[var(--color-border)] focus:border-[var(--color-accent)] focus:outline-none text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] transition-all shadow-lg"
+          required
+          disabled={isSubmitting || submitStatus === "success"}
+        />
+      </div>
+
+      <button
+        type="submit"
+        disabled={isSubmitting || submitStatus === "success"}
+        className="w-full py-4 px-8 rounded-2xl bg-gradient-to-r from-[var(--color-accent)] to-orange-500 text-white font-semibold text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      >
+        {isSubmitting ? (
+          <>
+            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            <span>Đang xử lý...</span>
+          </>
+        ) : submitStatus === "success" ? (
+          <>
+            <Check size={20} />
+            <span>Đã đăng ký thành công!</span>
+          </>
+        ) : (
+          <>
+            <span>Tham gia hàng đợi</span>
+          </>
+        )}
+      </button>
+
+      {submitStatus === "success" && (
+        <motion.p
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-green-600 text-sm font-medium text-center"
+        >
+          ✓ Cảm ơn bạn! Chúng tôi sẽ thông báo cho bạn khi sản phẩm ra mắt.
+        </motion.p>
+      )}
+
+      {submitStatus === "error" && (
+        <motion.p
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-red-500 text-sm font-medium text-center"
+        >
+          ✗ Vui lòng nhập địa chỉ email hợp lệ.
+        </motion.p>
+      )}
+
+      <p className="text-sm text-[var(--color-text-muted)] text-center">
+        Đăng ký để nhận thông báo sớm nhất về ngày ra mắt và ưu đãi đặc biệt dành cho người dùng đầu tiên.
+      </p>
+    </form>
+  );
+}
 
 export default function TeacherLandingPage() {
   const [activeFeature, setActiveFeature] = useState(0);
@@ -360,7 +453,7 @@ export default function TeacherLandingPage() {
         </div>
       </section>
 
-      {/* Pricing Section */}
+      {/* Pricing Section - Coming Soon */}
       <section id="pricing" className="py-24 px-6 bg-[var(--color-bg-alt)]">
         <div className="max-w-6xl mx-auto">
           <motion.div {...fadeInUp} className="text-center mb-16">
@@ -371,90 +464,128 @@ export default function TeacherLandingPage() {
               </span>
             </div>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl heading-editorial text-[var(--color-text)] mb-4">
-              Chọn gói phù hợp với bạn
+              Sắp ra mắt trong thời gian tới
             </h2>
             <p className="text-lg text-[var(--color-text-muted)] max-w-2xl mx-auto">
-              Bắt đầu miễn phí và nâng cấp khi bạn sẵn sàng
+              Chúng tôi đang hoàn thiện sản phẩm để mang đến trải nghiệm tốt nhất cho giáo viên
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {pricingPlans.map((plan, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className={`relative card-warm p-8 ${
-                  plan.featured 
-                    ? "ring-2 ring-[var(--color-accent)] shadow-xl" 
-                    : ""
-                }`}
-              >
-                {plan.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1 rounded-full bg-[var(--color-accent)] text-white text-sm font-medium flex items-center gap-1">
-                      <Sparkles size={14} /> {plan.badge}
-                    </span>
-                  </div>
-                )}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-3xl mx-auto"
+          >
+            <div className="card-warm p-12 text-center space-y-6">
+              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-orange-500/10 to-amber-500/10 backdrop-blur-md border border-[var(--color-accent)]/30 text-[var(--color-accent)] text-sm font-semibold shadow-lg">
+                <Sparkles size={18} className="animate-pulse" />
+                <span>Coming Soon</span>
+              </div>
+              
+              <h3 className="font-serif text-2xl md:text-3xl text-[var(--color-text)]">
+                Đang trong giai đoạn phát triển
+              </h3>
+              
+              <p className="text-[var(--color-text-muted)] text-lg leading-relaxed">
+                Sản phẩm của chúng tôi hiện đang được phát triển và hoàn thiện. 
+                Tham gia hàng đợi để nhận thông báo sớm nhất khi ra mắt và nhận được 
+                <span className="font-semibold text-[var(--color-accent)]"> ưu đãi đặc biệt dành cho người dùng đầu tiên</span>.
+              </p>
 
-                <div className="text-center mb-6 pt-2">
-                  <h3 className="font-serif text-2xl text-[var(--color-text)] mb-2">{plan.name}</h3>
-                  <p className="text-sm text-[var(--color-text-muted)]">{plan.target}</p>
-                </div>
+              <div className="pt-4">
+                <a 
+                  href="#waitlist" 
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-[var(--color-accent)] to-orange-500 text-white font-semibold text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all"
+                >
+                  <span>Tham gia hàng đợi</span>
+                  <ArrowRight size={20} />
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
-                <div className="text-center mb-6">
-                  <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-4xl md:text-5xl font-bold text-[var(--color-text)]">{plan.price}</span>
-                    <span className="text-lg text-[var(--color-text-muted)]">đ{plan.period}</span>
-                  </div>
-                  {plan.promo && (
-                    <p className="text-sm text-[var(--color-accent)] font-medium mt-2">{plan.promo}</p>
-                  )}
-                </div>
+      {/* Waitlist Section */}
+      <section id="waitlist" className="py-24 px-6 bg-[var(--color-bg)]">
+        <div className="max-w-4xl mx-auto">
+          <motion.div {...fadeInUp} className="text-center mb-12">
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl heading-editorial text-[var(--color-text)] mb-6">
+              Tham gia hàng đợi ngay hôm nay
+            </h2>
+            <p className="text-xl text-[var(--color-text-muted)] leading-relaxed max-w-2xl mx-auto">
+              Đăng ký để nhận thông báo sớm nhất về ngày ra mắt và các ưu đãi đặc biệt
+            </p>
+          </motion.div>
 
-                <div className="space-y-4 mb-8">
-                  <div className="p-3 rounded-lg bg-[var(--color-bg)]">
-                    <p className="text-sm text-[var(--color-text-muted)]">Hạn mức:</p>
-                    <p className="font-medium text-[var(--color-text)]">{plan.limit}</p>
-                  </div>
-                  
-                  {plan.overLimit && (
-                    <div className="p-3 rounded-lg bg-[var(--color-bg)]">
-                      <p className="text-sm text-[var(--color-text-muted)]">Phí vượt hạn mức:</p>
-                      <p className="font-medium text-[var(--color-text)]">{plan.overLimit}</p>
-                    </div>
-                  )}
-                </div>
+          {/* Benefits Grid */}
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-center space-y-4"
+            >
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-white font-bold text-2xl mx-auto shadow-lg">
+                1
+              </div>
+              <h3 className="font-semibold text-xl text-[var(--color-text)]">
+                Ưu đãi đặc biệt
+              </h3>
+              <p className="text-[var(--color-text-muted)] leading-relaxed">
+                Người dùng đầu tiên sẽ nhận được <span className="font-semibold text-[var(--color-accent)]">miễn phí 6 tháng đầu</span> và các ưu đãi độc quyền
+              </p>
+            </motion.div>
 
-                <div className="space-y-3 mb-8">
-                  <p className="text-sm font-medium text-[var(--color-text)]">Tính năng:</p>
-                  {plan.features.map((feature, fIndex) => (
-                    <div key={fIndex} className="flex items-start gap-2">
-                      <Check size={16} className="text-green-600 shrink-0 mt-0.5" />
-                      <span className="text-sm text-[var(--color-text-muted)]">{feature}</span>
-                    </div>
-                  ))}
-                  {plan.limitations.map((limitation, lIndex) => (
-                    <div key={lIndex} className="flex items-start gap-2">
-                      <X size={16} className="text-red-400 shrink-0 mt-0.5" />
-                      <span className="text-sm text-[var(--color-text-muted)]">{limitation}</span>
-                    </div>
-                  ))}
-                </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-center space-y-4"
+            >
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-white font-bold text-2xl mx-auto shadow-lg">
+                2
+              </div>
+              <h3 className="font-semibold text-xl text-[var(--color-text)]">
+                Truy cập sớm
+              </h3>
+              <p className="text-[var(--color-text-muted)] leading-relaxed">
+                Trải nghiệm sản phẩm trước khi ra mắt chính thức và đóng góp ý kiến để cải thiện
+              </p>
+            </motion.div>
 
-                <button className={`w-full py-3 rounded-full font-medium transition-all ${
-                  plan.featured
-                    ? "bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)]"
-                    : "bg-[var(--color-text)] text-white hover:bg-[var(--color-text)]/90"
-                }`}>
-                  {plan.cta}
-                </button>
-              </motion.div>
-            ))}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="text-center space-y-4"
+            >
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-white font-bold text-2xl mx-auto shadow-lg">
+                3
+              </div>
+              <h3 className="font-semibold text-xl text-[var(--color-text)]">
+                Cập nhật mới nhất
+              </h3>
+              <p className="text-[var(--color-text-muted)] leading-relaxed">
+                Nhận thông tin về tính năng mới, lộ trình phát triển và ngày ra mắt chính thức
+              </p>
+            </motion.div>
           </div>
+
+          {/* Email Signup Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+            className="max-w-xl mx-auto"
+          >
+            <WaitlistForm />
+          </motion.div>
         </div>
       </section>
 
