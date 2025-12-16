@@ -20,7 +20,7 @@ export default function LandingPage() {
           </Link>
           
           <div className="hidden lg:flex items-center gap-8 text-sm font-medium text-[var(--color-text-muted)]">
-             <Link href="#teachers" className="hover:text-[var(--color-text)] transition-colors">Giáo viên</Link>
+             <Link href="/teachers" className="hover:text-[var(--color-text)] transition-colors">Giáo viên</Link>
              <Link href="#students" className="hover:text-[var(--color-text)] transition-colors">Học sinh</Link>
              <Link href="#parents" className="hover:text-[var(--color-text)] transition-colors">Phụ huynh</Link>
              <Link href="#blog" className="hover:text-[var(--color-text)] transition-colors">Blog</Link>
@@ -67,12 +67,12 @@ export default function LandingPage() {
                 </a>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <a href="#teachers" className="p-4 bg-[var(--color-bg)] rounded-lg hover:bg-[var(--color-bg-alt)] transition-colors group">
+                <Link href="/teachers" className="p-4 bg-[var(--color-bg)] rounded-lg hover:bg-[var(--color-bg-alt)] transition-colors group">
                   <p className="text-sm text-[var(--color-text-muted)] mb-1">Trợ giảng ảo</p>
                   <p className="font-medium text-[var(--color-text)] flex items-center gap-2">
                     Dành cho Giáo viên <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                   </p>
-                </a>
+                </Link>
                 <a href="#students" className="p-4 bg-[var(--color-bg)] rounded-lg hover:bg-[var(--color-bg-alt)] transition-colors group">
                   <p className="text-sm text-[var(--color-text-muted)] mb-1">Bạn học ảo</p>
                   <p className="font-medium text-[var(--color-text)] flex items-center gap-2">
