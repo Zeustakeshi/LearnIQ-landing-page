@@ -59,7 +59,7 @@ export const POST = async (req: NextRequest) => {
     }
 
     const llm = new ChatOllama({
-      model: "qwen3:8b",
+      model: process.env.OLLAMA_MODEL,
       temperature: 0.7,
       maxRetries: 1,
       baseUrl: process.env.OLLAMA_BASE_URL,
@@ -67,7 +67,7 @@ export const POST = async (req: NextRequest) => {
 
     const agent = createAgent({
       model: llm,
-      tools: tools,
+      tools: [],
     });
 
     const stream = await agent.stream({
